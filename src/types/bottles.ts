@@ -1,5 +1,5 @@
 
-export type BottleType =  'burgundy' | 'alsace';
+export type BottleType = 'bordeaux'| 'burgundy' | 'alsace';
 
 export interface BottleDesign {
     type: BottleType;

@@ -11,7 +11,11 @@ import previewAlsace1 from "../../public/assets/previewImages/alsace/screwcap.pn
 import previewAlsace2 from "../../public/assets/previewImages/alsace/standard.png"
 import { BottleType } from "@/types/bottles";
 
-export const capsuleOptions: Record <BottleType, { type: string; image: string; previewImage: string }[]> = {
+export const capsuleOptions: Record<BottleType, { type: string; image: string; previewImage: string }[]> = {
+    bordeaux: [
+        { type: "screw", image: burgundyCapsule1.src, previewImage: previewBurgundy1.src },
+        { type: "standard", image: burgundyCapsule2.src, previewImage: previewBurgundy2.src }
+    ],
     burgundy: [
         { type: "screw", image: burgundyCapsule1.src, previewImage: previewBurgundy1.src },
         { type: "standard", image: burgundyCapsule2.src, previewImage: previewBurgundy2.src }
