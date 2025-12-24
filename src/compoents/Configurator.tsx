@@ -3,14 +3,30 @@ import React, { useRef } from "react";
 import { useBottleStore } from "@/store/useBottleStore";
 import { capsuleOptions } from "@/constants/capsules";
 import { bottleOptions } from "@/constants/bottles";
+import Konva from "konva";
 
 export const Configurator = () => {
     const {
         step, liquidColor, selectedBottleType, selectedCapsuleType,
         setLiquidColor, setBottleType, setCapsuleType, nextStep, prevStep, capColor, setCapColor, setLabelImage,
-        isEditingLabel, setIsEditingLabel, labelImage
+        setIsEditingLabel, labelImage, stageRef
     } = useBottleStore();
     const fileInputRef = useRef<HTMLInputElement>(null);
+    // const stageRef = useRef<Konva.Stage>(null)
+    const handleDownload = () => {
+        const stage = stageRef?.current;
+        if (!stage) return;
+        setIsEditingLabel(false);
+        const dataUrl = stage.toDataURL({
+            pixelRatio: 3, // High quality
+            mimeType: 'image/png'
+        });
+        const link = document.createElement("a");
+        link.download = `custom-bottle-design.png`;
+        link.href = dataUrl;
+        link.click();
+        document.body.removeChild(link);
+    }
 
     const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -201,7 +217,7 @@ export const Configurator = () => {
                 {step > 1 && (
                     <button
                         onClick={prevStep}
-                        className="flex-1 py-3 border border-slate-200 bg-white rounded-xl font-bold text-slate-600 hover:bg-slate-50 transition-colors"
+                        className="flex justify-center cursor-pointer w-full py-3 border border-slate-200 bg-white rounded-xl font-bold text-slate-600 hover:bg-slate-50 transition-colors"
                     >
                         Back
                     </button>
@@ -209,13 +225,16 @@ export const Configurator = () => {
 
                 <button
                     onClick={() => {
-                        if (step === 6) setIsEditingLabel(false);
-                        nextStep();
+                        if (step === 6) {
+                            handleDownload();
+                        } else {
+                            nextStep();
+                        }
                     }}
-                    className="flex-[2] py-3 bg-cyan-600 text-white rounded-xl font-bold shadow-lg shadow-cyan-200 hover:bg-cyan-700 transition-all active:scale-95"
+                    className="flex justify-center cursor-pointer w-full py-3 bg-cyan-600 text-white rounded-xl font-bold shadow-lg shadow-cyan-200 hover:bg-cyan-700 transition-all active:scale-95"
                 >
                     {/* Check if we are on the final Review step (6) */}
-                    {step === 6 ? 'Confirm & Order' : 'Next Step'}
+                    {step === 6 ? 'Download' : 'Next Step'}
                 </button>
             </div>
         </div>

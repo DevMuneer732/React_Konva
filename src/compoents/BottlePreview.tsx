@@ -17,7 +17,7 @@ const hexToRgb = (hex: string) => {
 };
 
 export const BottlePreview = () => {
-    const { selectedBottleType, liquidColor, selectedCapsuleType, step, capColor, labelImage, isEditingLabel, setIsEditingLabel } = useBottleStore();
+    const { selectedBottleType, liquidColor, selectedCapsuleType, step, capColor, labelImage, isEditingLabel, setIsEditingLabel, setLabelImage, setStageRef } = useBottleStore();
 
     const [bottleImg, setBottleImg] = useState<HTMLImageElement | null>(null);
     const [capsuleImg, setCapsuleImg] = useState<HTMLImageElement | null>(null);
@@ -25,12 +25,13 @@ export const BottlePreview = () => {
     const [dims, setDims] = useState({ w: 100, h: 100 });
     const labelRef = useRef<Konva.Image>(null);
     const trRef = useRef<Konva.Transformer>(null)
+    const stageRef = useRef<Konva.Stage>(null);
     const handleStageClick = (e: any) => {
         if (e.target === e.target.getStage() || e.target.className === 'Image') {
-            // Keep editing if clicking the label, stop if clicking background
             if (e.target.className !== 'Image') setIsEditingLabel(false);
         }
     };
+
     const capRef = useRef<any>(null)
     // Load Bottle
     useEffect(() => {
@@ -74,13 +75,20 @@ export const BottlePreview = () => {
             trRef.current.getLayer()?.batchDraw();
         }
     }, [step, labelImageObj])
+
+    useEffect(() => {
+        if (stageRef.current) {
+            setStageRef(stageRef);
+        }
+    }, [setStageRef]);
+
     const rgb = hexToRgb(capColor);
     return (
         <div className="flex-1 flex items-center justify-center bg-[#F1F5F9]">
             <div className="bg-white p-12 rounded-[48px] shadow-inner border border-white/50 relative">
                 <div className="absolute bottom-12 left-1/2 -translate-x-1/2 w-32 h-4 bg-black/10 blur-xl rounded-full" />
 
-                <Stage width={300} height={400} onClick={handleStageClick}>
+                <Stage width={300} height={400} onClick={handleStageClick} ref={stageRef}>
                     <Layer>
                         {bottleImg && (
                             <>

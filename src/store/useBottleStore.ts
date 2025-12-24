@@ -2,6 +2,8 @@ import { create } from 'zustand';
 import { BottleType } from '@/types/bottles';
 import { bottleOptions } from '@/constants/bottles';
 import { capsuleOptions } from '@/constants/capsules';
+import { Stage } from 'react-konva';
+import Konva from 'konva';
 
 interface BottleState {
     step: number;
@@ -11,6 +13,8 @@ interface BottleState {
     capColor: string
     labelImage: string | null;
     isEditingLabel: boolean;
+    stageRef: React.RefObject<Konva.Stage | null> | null;
+
 
 
     setStep: (step: number) => void;
@@ -20,6 +24,7 @@ interface BottleState {
     setCapsuleType: (type: string) => void;
     setLabelImage: (img: string | null) => void;
     setIsEditingLabel: (isEditing: boolean) => void;
+    setStageRef: (ref: React.RefObject<Konva.Stage | null>) => void;
     nextStep: () => void;
     prevStep: () => void;
 }
@@ -32,6 +37,7 @@ export const useBottleStore = create<BottleState>((set) => ({
     selectedCapsuleType: capsuleOptions[bottleOptions[0].type][0].type,
     labelImage: null,
     isEditingLabel: false,
+    stageRef: null,
     setStep: (step) => set({ step }),
     setLiquidColor: (liquidColor) => set({ liquidColor }),
     setCapColor: (capColor) => set({ capColor }),
@@ -43,6 +49,7 @@ export const useBottleStore = create<BottleState>((set) => ({
     setCapsuleType: (type) => set({ selectedCapsuleType: type }),
     setLabelImage: (img) => set({ labelImage: img }),
     setIsEditingLabel: (isEditing) => set({ isEditingLabel: isEditing }),
+    setStageRef: (ref) => set({ stageRef: ref }),
     nextStep: () => set((state) => ({ step: Math.min(state.step + 1, 6) })),
     prevStep: () => set((state) => ({ step: Math.max(state.step - 1, 1) })),
 }));
